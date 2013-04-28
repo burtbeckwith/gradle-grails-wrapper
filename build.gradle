@@ -1,0 +1,107 @@
+import java.security.MessageDigest
+
+apply plugin: 'eclipse'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = 'com.burtbeckwith.gradle.grails'
+version = '0.1'
+description = 'Calls Grails commands to build applications and plugins'
+
+String githubUrl = 'git@github.com:burtbeckwith/gradle-grails-wrapper.git'
+File pomFile = new File(buildDir, "libs/$project.name-${project.version}.pom")
+
+dependencies {
+	groovy localGroovy()
+	compile gradleApi()
+}
+
+task writePom << {
+	pom {
+		project {
+			name project.name
+			description project.description
+			licenses {
+				license {
+					name 'The Apache Software License, Version 2.0'
+					url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					distribution 'repo'
+				}
+			}
+			url 'http://burtbeckwith.github.io/gradle-grails-wrapper/'
+			licenses {
+				license {
+					name 'The Apache Software License, Version 2.0'
+					url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					distribution 'repo'
+				}
+			}
+			scm {
+				connection "scm:git:$githubUrl"
+				developerConnection "scm:git:$githubUrl"
+				url githubUrl
+			}
+			developers {
+				developer {
+					id 'BurtBeckwith'
+					name 'Burt Beckwith'
+					email 'burt@burtbeckwith.com'
+					url 'http://burtbeckwith.com'
+					roles {
+						role 'developer'
+					}
+					timezone '-5'
+				}
+			}
+		}
+	}.writeTo(pomFile.path)
+}
+
+signing {
+//	required = { -> gradle.taskGraph.hasTask('uploadArchives') }
+	tasks.writePom.execute() // TODO see why dependsOn doesn't work
+	sign configurations.archives
+	sign pomFile
+}
+
+signArchives.doLast {
+	new File(buildDir, 'libs').eachFile { File file ->
+		String name = file.name
+		if (!name.startsWith("$project.name-${project.version}") ||
+			 (!name.endsWith('.pom') && !name.endsWith('.jar') && !name.endsWith('.asc'))) {
+			return
+		}
+
+		String content = file.text
+		new File(file.path + '.md5') << hash('MD5', content, 32)
+		new File(file.path + '.sha1') << hash('SHA-1', content, 40)
+	}
+}
+
+String hash(String algorithm, String input, int length) {
+	MessageDigest messageDigest = MessageDigest.getInstance(algorithm)
+	messageDigest.update(input.bytes)
+	new BigInteger(1, messageDigest.digest()).toString(16).padLeft(length, '0')
+}
+
+task sourceJar(type: Jar) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
+artifacts {
+	archives jar, sourceJar, javadocJar
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '1.5'
+}
+
+defaultTasks 'build', 'signArchives'
