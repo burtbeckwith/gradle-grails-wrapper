@@ -107,7 +107,12 @@ task upload(dependsOn: [build, signArchives]) << {
 	checkoutFolder.mkdirs()
 
 	exec {
-		commandLine('git', 'clone', githubUrl, '-b', 'gh-pages')
+		commandLine 'git', 'clone', githubUrl, '-b', 'gh-pages'
+		workingDir checkoutFolder
+	}
+
+	exec {
+		commandLine 'git', 'merge', 'master'
 		workingDir checkoutFolder
 	}
 
