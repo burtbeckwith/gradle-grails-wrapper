@@ -1,62 +1,185 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<head>
+		<meta charset='utf-8'>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+		<link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
-    <title>Gradle-grails-wrapper by burtbeckwith</title>
-  </head>
+		<title>gradle-grails-wrapper</title>
+	</head>
 
-  <body>
+	<body>
 
-    <header>
-      <div class="container">
-        <h1>Gradle-grails-wrapper</h1>
-        <h2></h2>
+		<header>
+			<div class="container">
+				<h1>gradle-grails-wrapper</h1>
+				<h2></h2>
 
-        <section id="downloads">
-          <a href="https://github.com/burtbeckwith/gradle-grails-wrapper/zipball/master" class="btn">Download as .zip</a>
-          <a href="https://github.com/burtbeckwith/gradle-grails-wrapper/tarball/master" class="btn">Download as .tar.gz</a>
-          <a href="https://github.com/burtbeckwith/gradle-grails-wrapper" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
-      </div>
-    </header>
+				<section id="downloads">
+					<a href="https://github.com/burtbeckwith/gradle-grails-wrapper/zipball/master" class="btn">Download as .zip</a>
+					<a href="https://github.com/burtbeckwith/gradle-grails-wrapper/tarball/master" class="btn">Download as .tar.gz</a>
+					<a href="https://github.com/burtbeckwith/gradle-grails-wrapper" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+				</section>
+			</div>
+		</header>
 
-    <div class="container">
-      <section id="main_content">
-        <h3>Welcome to GitHub Pages.</h3>
+		<div class="container">
+			<section id="main_content">
+				<h1>Gradle Grails Wrapper</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>This is a plugin for <a target='_blank' href="http://www.gradle.org">Gradle</a> that builds <a target='_blank' href="http://grails.org">Grails</a> applications.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<h2>Using the plugin</h2>
+
+The plugin isn't available at Maven Central, but is in a Maven-compatible repository on Github, so add this to your build.gradle script:
+
+<pre><code>buildscript {
+   repositories {
+      maven {
+         url 'http://burtbeckwith.github.io/gradle-grails-wrapper/m2/'
+      }
+   }
+   dependencies {
+      classpath 'com.burtbeckwith.gradle.grails:gradle-grails-wrapper:0.1'
+   }
+}
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+and register a dependency for the plugin with
 
-<h3>Designer Templates</h3>
+<pre><code>apply plugin: 'grails'</code></pre>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>The plugin will auto-discover the version of Grails that you are using based on the version in build.properties and use it to execute Grails commands. If you are outside of a project (for example to run the <code>create-app</code> or <code>create-plugin</code> scripts) then the plugin looks for the <code>GRAILS_HOME</code> environment variable and uses that version of Grails. If that is not set, then it uses a default version.</p>
 
-<h3>Rather Drive Stick?</h3>
+<p>There are a few configuration options that you can set in a <code>grails</code> block. The default values are</p>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<pre><code>grails {
+   installBase = '/usr/local/javalib'
+   installPrefix = 'grails-'
+   defaultVersion = '2.0.4'
+   devVersion = '2.3.0.BUILD-SNAPSHOT'
+   devHome = System.env.HOME + '/workspace.grails/grails-core'
+   verbose = false
+   stacktrace = false
+}
+</code></pre>
 
-<h3>Authors and Contributors</h3>
+so for example if you use <a target='_blank' href='http://gvmtool.net/'>GVM</a> you can change the directory where your Grails distributions are installed with
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<pre><code>grails {
+   installBase = System.env.HOME + '/.gvm/grails'
+   installPrefix = ''
+}
+</code></pre>
 
-<h3>Support or Contact</h3>
+or to configure verbose output and full stacktraces, use
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-    </div>
+<pre><code>grails {
+   verbose = true
+   stacktrace = true
+}
+</code></pre>
 
-    
-  </body>
+<h2>Using the plugin</h2>
+
+<p>The plugin finds all available Grails commands by looking in the <code>scripts</code> directory of your Grails install, and adds Gradle tasks for each one. The task name is the Grails command name prefixed with <code>grails-</code>, for example:
+
+<pre><code>gradle grails-run-app</code></pre>
+
+or
+
+<pre><code>gradle grails-war</code></pre>
+
+<p>As with any Gradle project, to see all of the available commands run:</p>
+
+<pre><code>gradle tasks</code></pre>
+
+<p>Passing command arguments uses a different syntax than running regular Grails comands due to the Gradle command line parsing process. Also, when specifying arguments be sure to only execute one command since all arguments will be passed to all commands. There are two syntaxes supported, using <code>-P</code> or <code>--project-prop</code>, both using <code>argN</code> parameter names. For example running</p>
+
+<pre><code>gradle grails-create-domain-class -Parg0=com.test.Thing
+gradle grails-generate-all --project-prop arg0=com.test.Thing
+</code></pre>
+
+will create a domain class and generate static scaffolding for it.
+
+<p>To pass system parameters, use <code>-P</code> or <code>--project-prop</code> with <code>dN</code> argument names. So for example to build a war with a non-standard environment name "staging", use either
+</p>
+
+<pre><code>gradle grails-war -Pd0=grails.env=staging</code></pre>
+
+or
+
+<pre><code>gradle grails-war --project-prop d0=grails.env=staging</code></pre>
+
+<h2>Included tasks</h2>
+
+<p>All Grails commands are registered as Gradle tasks with the <code>grails-</code> prefix as described above. They run with the <code>-plain-output</code> flag. If <code>verbose</code> is <code>true</code> in the <code>grails</code> configuration block, the <code>--verbose</code> flag is added, and if <code>stacktrace</code> is <code>true</code> the <code>--stacktrace</code> flag is added.</p>
+
+<p>In addition, there is a <code>plugin-init</code> task which creates the <code>grails-app/conf/hibernate</code>, <code>grails-app/conf/spring</code>, <code>test/integration</code>, and <code>test/unit</code> directories to avoid warnings during testing and other scripts.</p>
+
+<p>There is a <code>clean</code> task which depends on <code>plugin-init</code> and <code>grails-clean</code>, and deletes any log files in the base directory.</p>
+
+<p>There is a <code>test</code> task that depends on <code>clean</code> and <code>grails-test-app</code> to ensure that tests run with newly compiled classes.</p>
+
+<p>There is a <code>package-plugin</code> task which depends on <code>test</code> and <code>grails-package-plugin</code> to ensure that you run tests before building a plugin project ZIP file. It deletes any empty directories in the <code>grails-app</code>, <code>lib</code>, <code>scripts</code>, <code>src</code>, <code>test</code>, and <code>web-app</code> directories (including the directories themselves) since running <code>test-app</code> re-creates unnecessary empty directories.</p>
+
+<p>Finally there is the <code>post-package-cleanup</code> task which deletes the empty directories described above; this is a standalone task so you can call it directly.</p>
+
+<h2>Build Scripts</h2>
+
+You're free to add custom tasks to your build script, but an initial version can be as simple as
+
+<pre><code>
+buildscript {
+   repositories {
+      maven {
+         url 'http://burtbeckwith.github.io/gradle-grails-wrapper/m2/'
+      }
+   }
+   dependencies {
+      classpath 'com.burtbeckwith.gradle.grails:gradle-grails-wrapper:0.1'
+   }
+}
+
+apply plugin: 'grails'
+</code></pre>
+
+<p>if by some usual coincidence you use the same install directories that I use.</p>
+
+<p>A more realistic example using GVM would be</p>
+
+<pre><code>
+buildscript {
+   repositories {
+      maven {
+         url 'http://burtbeckwith.github.io/gradle-grails-wrapper/m2/'
+      }
+   }
+   dependencies {
+      classpath 'com.burtbeckwith.gradle.grails:gradle-grails-wrapper:0.1'
+   }
+}
+
+apply plugin: 'grails'
+
+grails {
+   installBase = System.env.HOME + '/.gvm/grails'
+   installPrefix = ''
+}
+</code></pre>
+
+and for plugin projects you can make the <code>package-plugin</code> task the default with
+
+<pre><code>defaultTasks 'package-plugin'</code></pre>
+
+so you can run a full build with tests and packaging just by running
+
+<pre><code>gradle</code></pre>
+
+			</section>
+		</div>
+	</body>
 </html>
