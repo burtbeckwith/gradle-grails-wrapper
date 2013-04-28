@@ -100,6 +100,42 @@ artifacts {
 	archives jar, sourceJar, javadocJar
 }
 
+task upload(dependsOn: [build, signArchives]) << {
+
+	File checkoutFolder = new File(buildDir.canonicalPath, 'release')
+	assert checkoutFolder.deleteDir()
+	checkoutFolder.mkdirs()
+
+	exec {
+		commandLine('git', 'clone', githubUrl, '-b', 'gh-pages')
+		workingDir checkoutFolder
+	}
+
+	File checkoutProjectFolder = new File(checkoutFolder.canonicalPath, 'gradle-grails-wrapper')
+	File repoDir = new File(checkoutProjectFolder,
+		'm2/' + project.group.replaceAll('\\.', '/') + '/' + project.name + '/' + version)
+	repoDir.mkdirs()
+
+	copy {
+		from new File(buildDir.path, 'libs')
+		into repoDir
+	}
+
+	exec {
+		commandLine 'git', 'add', '.'
+		workingDir repoDir
+	}
+
+	exec {
+		commandLine 'git', 'commit', '-m', "Released version $project.version"
+	}
+
+	exec {
+		commandLine 'git', 'push'
+		workingDir checkoutProjectFolder
+	}
+}
+
 task wrapper(type: Wrapper) {
 	gradleVersion = '1.5'
 }
