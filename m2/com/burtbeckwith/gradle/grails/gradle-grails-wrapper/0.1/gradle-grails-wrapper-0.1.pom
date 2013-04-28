@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.burtbeckwith.gradle.grails</groupId>
+  <artifactId>gradle-grails-wrapper</artifactId>
+  <version>0.1</version>
+  <name>gradle-grails-wrapper</name>
+  <description>Calls Grails commands to build applications and plugins</description>
+  <url>http://burtbeckwith.github.io/gradle-grails-wrapper/</url>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>BurtBeckwith</id>
+      <name>Burt Beckwith</name>
+      <email>burt@burtbeckwith.com</email>
+      <url>http://burtbeckwith.com</url>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>-5</timezone>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git@github.com:burtbeckwith/gradle-grails-wrapper.git</connection>
+    <developerConnection>scm:git:git@github.com:burtbeckwith/gradle-grails-wrapper.git</developerConnection>
+    <url>git@github.com:burtbeckwith/gradle-grails-wrapper.git</url>
+  </scm>
+</project>
