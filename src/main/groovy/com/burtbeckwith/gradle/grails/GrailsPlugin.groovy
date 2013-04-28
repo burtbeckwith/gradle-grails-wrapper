@@ -60,15 +60,20 @@ class GrailsPlugin implements Plugin<Project> {
 		configureTask test, 'Runs "grails test-app"'
 
 		Task packagePlugin = project.task('package-plugin')
-		packagePlugin.dependsOn 'test', 'grails-package-plugin', 'post-package-cleanup'
+		packagePlugin.dependsOn 'test', 'grails-package-plugin'
+		packagePlugin.doLast { deleteEmptyDirs() }
 		configureTask packagePlugin, 'Runs tests, "grails package-plugin", and deletes empty directories'
 
 		Task postPackageCleanup = project.task('post-package-cleanup') << {
-			for (name in ['grails-app', 'lib', 'scripts', 'src', 'test', 'web-app']) {
-				deleteEmpty new File(name)
-			}
+			deleteEmptyDirs()
 		}
 		configureTask postPackageCleanup, 'Deletes empty directories'
+	}
+
+	protected void deleteEmptyDirs() {
+		for (name in ['grails-app', 'lib', 'scripts', 'src', 'test', 'web-app']) {
+			deleteEmpty new File(name)
+		}
 	}
 
 	protected void deleteEmpty(File f) {
