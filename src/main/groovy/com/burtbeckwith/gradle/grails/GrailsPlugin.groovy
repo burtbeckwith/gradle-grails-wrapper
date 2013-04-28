@@ -14,6 +14,7 @@ class GrailsPlugin implements Plugin<Project> {
 
 	static class BuildProperties {
 		String installBase = '/usr/local/javalib'
+		String installPrefix = 'grails-'
 		String defaultVersion = '2.0.4'
 		String devVersion = '2.3.0.BUILD-SNAPSHOT'
 		String devHome = System.env.HOME + '/workspace.grails/grails-core'
@@ -160,7 +161,7 @@ class GrailsPlugin implements Plugin<Project> {
 		}
 
 		if (grailsVersion && !grailsVersionDir) {
-			grailsVersionDir = "$project.grails.installBase/grails-$grailsVersion"
+			grailsVersionDir = "$project.grails.installBase/$project.grails.installPrefix$grailsVersion"
 		}
 
 		if (!new File(grailsVersionDir).exists()) {
